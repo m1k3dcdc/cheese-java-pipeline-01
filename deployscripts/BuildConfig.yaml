@@ -1,0 +1,15 @@
+
+kind: "BuildConfig"
+apiVersion: "build.openshift.io/v1"
+metadata:
+  name: "cheese-java-pipeline"
+spec:
+  source:
+    git:
+      uri: "https://github.com/m1k3dcdc/cheese-java-pipeline-01"
+      ref: "main"
+    contextDir: .
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: Jenkinsfile
+    type: JenkinsPipeline
