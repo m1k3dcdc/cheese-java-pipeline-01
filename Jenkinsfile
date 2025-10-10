@@ -33,7 +33,7 @@ pipeline {
                                 //openshift.newApp('deployscripts/BuildConfig.yaml')
                                 openshift.newBuild("--name=${APP_NAME}", "--image=docker.io/m1k3pjem/hello-java-spring-boot", "--binary")
                                 //sh "oc create -f deployscripts/BuildConfig.yaml -n ${DEV_PROJECT}"
-                                openshift.selector("bc", "${APP_NAME}").startBuild("--follow")
+                                openshift.selector("bc", "${APP_NAME}").startBuild("--from-dir=.", "--follow")
                                 //sh "oc start-build ${APP_NAME} --follow"                                
                             }
                             /*
