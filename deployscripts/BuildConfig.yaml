@@ -2,7 +2,7 @@
 kind: "BuildConfig"
 apiVersion: "build.openshift.io/v1"
 metadata:
-  name: "cheese-java-pipeline"
+  name: "cheese-java-pipeline-01"
 spec:
   source:
     git:

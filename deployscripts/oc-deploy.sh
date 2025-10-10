@@ -2,19 +2,20 @@
 # ##### Variable section - START
 SCRIPT=oc-deploy.sh
 OPENSHIFT_PROJECT=mavc23-dev
-GITHUB_SECRET=$2
+GITHUB_SECRET=$1
 # ##### Variable section - END   
 
 # ***** Function section - START
 deploy()
 {
     #oc new-project $OPENSHIFT_PROJECT
+    echo Test in PROJECT
     oc project $OPENSHIFT_PROJECT
     #BASE_DOMAIN=$(oc get DNS cluster -o jsonpath='{.spec.baseDomain}')
     #echo OpenShift cluster domain is ${grn}$BASE_DOMAIN${end}
     echo $PWD
 
-    oc new-app -f $PWD/cheese-java-pipeline-template.yaml -n mavc23-dev
+    oc new-app -f $PWD/cheese-java-pipeline-template.yaml -n OPENSHIFT_PROJECT=$OPENSHIFT_PROJECT
     #oc patch svc OPENSHIFT_APP_LABEL --type=json -p '[{"op": "replace", "path": "/spec/ports/0/targetPort", "value":8082}]'   -n OPENSHIFT_PROJECT=$OPENSHIFT_PROJECT -p OPENSHIFT_CLUSTER_DOMAIN=$BASE_DOMAIN -p OPENSHIFT_GITHUB_SECRET=$GITHUB_SECRET
     ROUTE_URL=$(oc get route cheese-java-pipeline -o jsonpath='{.spec.host}')
     echo Test it at ${grn}$ROUTE_URL${end}
@@ -30,7 +31,7 @@ inputParameters()
         echo ${grn}Enter OpenShift project - leaving blank will set project to ${end}${mag}cheese : ${end}
         read OPENSHIFT_PROJECT
         if [ "$OPENSHIFT_PROJECT" == "" ]; then
-            OPENSHIFT_PROJECT=cheese
+            OPENSHIFT_PROJECT=mavc23-dev
         fi
     fi
     ###### Input GitHub Secret

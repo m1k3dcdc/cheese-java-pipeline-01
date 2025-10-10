@@ -1,15 +1,13 @@
 pipeline {
     options {
         // set a timeout of 60 minutes for this pipeline
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 10, unit: 'MINUTES')
     }
 
     environment {
-        APP_NAME = "cheese-java-pipeline"
+        APP_NAME = "cheese-java-pipeline-01"
         DEV_PROJECT = "mavc23-dev"
-        STAGE_PROJECT = "cheese-stage"
-        PROD_PROJECT = "cheese-prod"
-        APP_GIT_URL = "https://github.com/m1k3dcdc/cheese-java-pipeline-01"
+        APP_GIT_URL = "https://github.com/m1k3dcdc/hello-java-spring-boot.git"
     }
     
     agent {
@@ -42,7 +40,10 @@ pipeline {
                             // If BuildConfig does not exist, deploy a new application using an OpenShift Template
                             else{
                                 echo "BuildConfig " + APP_NAME + " does not exist, creating app ..."
-                                openshift.newApp('deployscripts/cheese-java-pipeline-template.yaml')
+                                echo $PWD
+                                //oc create -f $PWD/deployscripts/BuildConfig.yaml
+                                //oc set triggers bc/cheese-java-pipeline --from-github
+                                openshift.newApp('deployscripts/BuildConfig.yaml.yaml')
                             }
                             def route = openshift.selector("route", APP_NAME)
                             echo "Test application with "

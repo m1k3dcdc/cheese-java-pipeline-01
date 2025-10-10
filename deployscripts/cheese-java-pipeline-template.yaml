@@ -85,16 +85,6 @@ objects:
           - containerPort: 8080
             protocol: TCP
     test: false
-    triggers:
-    - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - windfire-restaurants-backend
-        from:
-          kind: ImageStreamTag
-          name: ${APP_NAME}:latest
-      type: ImageChange
 - apiVersion: v1
   kind: Service
   metadata:
