@@ -26,12 +26,6 @@ pipeline {
                                 // Start new build (it corresponds to oc start-build <buildconfig>)
                                 def bc = openshift.selector("bc", "${APP_NAME}")
                                 bc.startBuild()
-                                // If a Route does not exist, expose the Service and create the Route
-                                if (!openshift.selector("route", APP_NAME).exists()) {
-                                    echo "Route " + APP_NAME + " does not exist, exposing service ..." 
-                                    def service = openshift.selector("service", APP_NAME)
-                                    service.expose()
-                                }
                             } 
                             // If BuildConfig does not exist, deploy a new application using an OpenShift Template
                             else{
@@ -43,16 +37,22 @@ pipeline {
                                 sh "oc create -f deployscripts/BuildConfig.yaml -n ${DEV_PROJECT}"
                                 def bc = openshift.selector("bc", "${APP_NAME}")
                                 bc.startBuild()
-                                //sh "oc start-build ${APP_NAME} --follow"
-                                
+                                //sh "oc start-build ${APP_NAME} --follow"                                
                             }
-                            def route = openshift.selector("route", APP_NAME)
-                            echo "Test application with "
-                            def result = route.describe()   
-                        }
-                    }
-                }
-            }
-        }
+                            // If a Route does not exist, expose the Service and create the Route
+                            if (!openshift.selector("route", APP_NAME).exists()) {
+                                echo "Route " + APP_NAME + " does not exist, exposing service ..." 
+                                //def service = openshift.selector("service", APP_NAME)
+                                //service.expose()
+                            } else {
+                                def route = openshift.selector("route", APP_NAME)
+                                echo "Test application with "
+                                def result = route.describe()   
+                            }    
+                        } // withProject
+                    } // withCluster
+                } // script
+            } // steps
+        } // stage
     }
 }
