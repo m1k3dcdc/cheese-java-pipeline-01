@@ -31,11 +31,12 @@ pipeline {
                                 echo "- BuildConfig " + APP_NAME + " does not exist, creating from BuildConfig.yaml ..."
                                 //oc set triggers bc/cheese-java-pipeline --from-github
                                 //openshift.newApp('deployscripts/BuildConfig.yaml')
+                                openshift.newBuild("--name=${APP_NAME}", "--image=docker.io/m1k3pjem/hello-java-spring-boot", "--binary")
                                 sh "oc create -f deployscripts/BuildConfig.yaml -n ${DEV_PROJECT}"
-                                //def bc = openshift.selector("bc", "${APP_NAME}")
-                                //bc.startBuild()
-                                sh "oc start-build ${APP_NAME} --follow"                                
+                                openshift.selector("bc", "${APP_NAME}").startBuild("--follow")
+                                //sh "oc start-build ${APP_NAME} --follow"                                
                             }
+                            /*
                             // If a Route does not exist, expose the Service and create the Route
                             if (!openshift.selector("route", APP_NAME).exists()) {
                                 echo "Route " + APP_NAME + " does not exist, exposing service ..." 
@@ -45,11 +46,31 @@ pipeline {
                                 def route = openshift.selector("route", APP_NAME)
                                 echo "Test application with "
                                 def result = route.describe()   
-                            }    
+                            }    */
                         } // withProject
                     } // withCluster
                 } // script
             } // steps
+        } // stage
+
+        stage('Deploy') {
+          steps {
+            echo 'Deploying....'
+            script {
+              openshift.withCluster() {
+                openshift.withProject("$DEV_PROJECT") {
+    
+                  def deployment = openshift.selector("dc", "${APP_NAME}")
+    
+                  if (!deployment.exists()) {
+                    //openshift.newApp('hello-java-spring-boot', "--as-deployment-config").narrow('svc').expose()
+                    sh "oc apply -f ./deploy.yml -n ${DEV_PROJECT}"
+                  }
+    
+                }    // withProject
+              }    // withCluster
+            }    // script
+          }    // steps
         } // stage
     }
 }
