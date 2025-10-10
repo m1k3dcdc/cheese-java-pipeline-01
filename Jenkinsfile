@@ -39,7 +39,7 @@ pipeline {
                                 //echo $PWD
                                 //oc create -f $PWD/deployscripts/BuildConfig.yaml
                                 //oc set triggers bc/cheese-java-pipeline --from-github
-                                openshift.newApp('deployscripts/BuildConfig.yaml.yaml')
+                                openshift.newApp('deployscripts/BuildConfig.yaml')
                             }
                             def route = openshift.selector("route", APP_NAME)
                             echo "Test application with "
