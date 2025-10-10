@@ -10,11 +10,7 @@ pipeline {
         APP_GIT_URL = "https://github.com/m1k3dcdc/hello-java-spring-boot.git"
     }
     
-    agent {
-      node {
-        label 'nodejs'
-      }
-    }
+    agent any
 
     stages {
         stage('Deploy to DEV environment') {
