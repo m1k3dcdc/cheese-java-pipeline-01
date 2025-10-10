@@ -5,20 +5,20 @@ items:
     kind: Deployment
     metadata:
       labels:
-        app: hello-java-spring-boot
-        app.kubernetes.io/component: hello-java-spring-boot
-        app.kubernetes.io/instance: hello-java-spring-boot
-      name: hello-java-spring-boot-deploy
+        app: cheese-java-pipeline-01
+        app.kubernetes.io/component: cheese-java-pipeline-01
+        app.kubernetes.io/instance: cheese-java-pipeline-01
+      name: cheese-java-pipeline-01-deploy
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: hello-java-spring-boot
+          app: cheese-java-pipeline-01
       template:
         metadata:
           labels:
-            app: hello-java-spring-boot
-          name: hello-java-spring-boot
+            app: cheese-java-pipeline-01
+          name: cheese-java-pipeline-01
         spec:
           containers:
             - image: docker.io/m1k3pjem/hello-java-spring-boot:latest
@@ -38,10 +38,10 @@ items:
     kind: Service
     metadata:
       labels:
-        app: hello-java-spring-boot
-        app.kubernetes.io/component: hello-java-spring-boot
-        app.kubernetes.io/instance: hello-java-spring-boot
-      name: hello-java-spring-boot-service
+        app: cheese-java-pipeline-01
+        app.kubernetes.io/component: cheese-java-pipeline-01
+        app.kubernetes.io/instance: cheese-java-pipeline-01
+      name: cheese-java-pipeline-01-service
     spec:
       ports:
         - name: 8080-tcp
@@ -49,16 +49,16 @@ items:
           protocol: TCP
           targetPort: 8080
       selector:
-        deployment: hello-java-spring-boot
+        deployment: cheese-java-pipeline-01
       sessionAffinity: None
       type: ClusterIP
   - apiVersion: v1
     kind: ConfigMap
     metadata:
       labels:
-          app: hello-java-spring-boot
-          app.kubernetes.io/component: hello-java-spring-boot
-          app.kubernetes.io/instance: hello-java-spring-boot
+          app: cheese-java-pipeline-01
+          app.kubernetes.io/component: cheese-java-pipeline-01
+          app.kubernetes.io/instance: cheese-java-pipeline-01
       name: hello-java-spring-boot-configmap
     data:
       thefavourite.cheese: GOUDA
