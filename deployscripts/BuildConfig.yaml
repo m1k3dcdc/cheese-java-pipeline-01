@@ -2,11 +2,11 @@
 kind: "BuildConfig"
 apiVersion: "build.openshift.io/v1"
 metadata:
-  name: "cheese-java-pipeline-01"
+  name: "cheese-java-pipeline-01-bc"
 spec:
   source:
     git:
-      uri: "https://github.com/m1k3dcdc/cheese-java-pipeline-01"
+      uri: "https://github.com/m1k3dcdc/cheese-java-pipeline-01.git"
       ref: "main"
     contextDir: .
   strategy:
