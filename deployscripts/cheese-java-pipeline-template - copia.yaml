@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: cheese-java-pipeline
+  name: ${APP_NAME}
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -27,22 +27,26 @@ objects:
     postCommit: {}
     resources: {}
     source:
-      contextDir: /
+      contextDir: app
       git:
         uri: https://github.com/m1k3dcdc/cheese-java-pipeline-01
-        ref: main
+        ref: ${GITHUB_BRANCH}
+      sourceSecret:
+        name: ${OPENSHIFT_GITHUB_SECRET}
       type: Git
     strategy:
-      type: Docker
-      dockerStrategy:
-        dockerfilePath: Dockerfile
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: nodejs:12
+          namespace: openshift
+      type: Source
     triggers:
-    - type: GitHub
     - type: ConfigChange
     - imageChange: {}
       type: ImageChange
 - apiVersion: apps.openshift.io/v1
-  kind: Deployment
+  kind: DeploymentConfig
   metadata:
     name: ${APP_NAME}
     labels:
@@ -50,15 +54,15 @@ objects:
   spec:
     replicas: 1
     selector:
-      matchLabels:
-        app: ${LABEL}
+      app: ${LABEL}
+      deploymentconfig: ${APP_NAME}
     strategy:
       resources: {}
     template:
       metadata:
         labels:
           app: ${LABEL}
-          deployment: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}
       spec:
         containers:
         - name: ${APP_NAME}
@@ -66,14 +70,34 @@ objects:
           env:
             - name: TIMEOUT
               value: ${TIMEOUT}
+            - name: DB_TYPE
+              value: ${DB_TYPE}
+            #- name: DB_SECRET
+            #  valueFrom:
+            #      secretKeyRef:
+            #        name: ${DB_SECRET}
+            #        key: binding
+            - name: DB_URL
+              value: ${DB_URL}
+            - name: DB_USER
+              value: ${DB_USER}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${MONGODB_SECRET}
+                  key: PASSWORD
+            - name: DB_NAME
+              value: ${DB_NAME}
+            - name: DB_COLLECTION
+              value: ${DB_COLLECTION}
           livenessProbe:
             httpGet:
-              path: /
-              port: 8080
+              path: /healthz
+              port: 8082
           readinessProbe:
             httpGet:
               path: /
-              port: 8080
+              port: 8082
           resources:
             limits:
               cpu: 200m
@@ -82,7 +106,7 @@ objects:
               cpu: 100m
               memory: 256Mi
           ports:
-          - containerPort: 8080
+          - containerPort: 8082
             protocol: TCP
     test: false
     triggers:
@@ -103,10 +127,10 @@ objects:
       app: ${LABEL}
   spec:
     ports:
-    - name: 8080tcp
-      port: 8080
+    - name: 8082-tcp
+      port: 8082
       protocol: TCP
-      targetPort: 8080
+      targetPort: 8082
     selector:
       app: ${LABEL}
       deploymentconfig: ${APP_NAME}
@@ -117,9 +141,9 @@ objects:
     labels:
       app: ${LABEL}
   spec:
-    host: ${APP_NAME}
+    host: ${APP_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
     port:
-      targetPort: 8080tcp
+      targetPort: 8082-tcp
     to:
       kind: Service
       name: ${APP_NAME}
@@ -128,13 +152,41 @@ objects:
 parameters:
   - name: GITHUB_BRANCH
     required: true
-    value: main
+    value: master
+  - name: OPENSHIFT_GITHUB_SECRET
+    required: true
+    value: robipozzi-github
   - name: APP_NAME 
     required: true
-    value: cheese-java-pipeline
+    value: windfire-restaurants-backend
   - name: LABEL 
     required: true
-    value: cheese-java-pipeline
+    value: windfire-restaurants-backend
+  - name: OPENSHIFT_PROJECT
+    required: true
+  - name: OPENSHIFT_CLUSTER_DOMAIN 
+    required: true
   - name: TIMEOUT
     required: true
-    value: '5000'
+    value: 5000
+  - name: DB_TYPE
+    required: true
+    value: mongodb
+  - name: DB_SECRET
+    required: true
+    value: binding-mongodb-demo
+  - name: MONGODB_SECRET
+    required: true
+    value: mongodb-secret
+  - name: DB_URL
+    required: true
+    value: windfire.rxdd4.mongodb.net
+  - name: DB_USER
+    required: true
+    value: mongodb
+  - name: DB_NAME
+    required: true
+    value: restaurants
+  - name: DB_COLLECTION
+    required: true
+    value: restaurants

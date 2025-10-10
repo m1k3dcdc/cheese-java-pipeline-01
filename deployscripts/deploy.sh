@@ -46,7 +46,7 @@ deployToOpenShift()
 {
 	## Deploy Windfire Restaurants backend component to Red Hat OpenShift using Template
     echo ${cyn}Deploy Cheese component to Red Hat OpenShift using Template ...${end}
-    deployscripts/oc-deploy.sh
+    ./oc-deploy.sh
     echo ${cyn}Done${end}
     echo
 }

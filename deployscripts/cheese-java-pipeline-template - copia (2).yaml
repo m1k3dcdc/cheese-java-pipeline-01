@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: cheese-java-pipeline
+  name: ${APP_NAME}
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -137,4 +137,4 @@ parameters:
     value: cheese-java-pipeline
   - name: TIMEOUT
     required: true
-    value: '5000'
+    value: 5000
