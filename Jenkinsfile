@@ -26,18 +26,15 @@ pipeline {
                                 // Start new build (it corresponds to oc start-build <buildconfig>)
                                 def bc = openshift.selector("bc", "${APP_NAME}")
                                 bc.startBuild()
-                            } 
-                            // If BuildConfig does not exist, deploy a new application using an OpenShift Template
-                            else{
+                            } else {
+                                // If BuildConfig does not exist, create
                                 echo "- BuildConfig " + APP_NAME + " does not exist, creating from BuildConfig.yaml ..."
-                                //echo $PWD
-                                //oc create -f $PWD/deployscripts/BuildConfig.yaml
                                 //oc set triggers bc/cheese-java-pipeline --from-github
                                 //openshift.newApp('deployscripts/BuildConfig.yaml')
                                 sh "oc create -f deployscripts/BuildConfig.yaml -n ${DEV_PROJECT}"
-                                def bc = openshift.selector("bc", "${APP_NAME}")
-                                bc.startBuild()
-                                //sh "oc start-build ${APP_NAME} --follow"                                
+                                //def bc = openshift.selector("bc", "${APP_NAME}")
+                                //bc.startBuild()
+                                sh "oc start-build ${APP_NAME} --follow"                                
                             }
                             // If a Route does not exist, expose the Service and create the Route
                             if (!openshift.selector("route", APP_NAME).exists()) {
