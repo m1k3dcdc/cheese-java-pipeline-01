@@ -17,8 +17,12 @@ spec:
       from:
         kind: DockerImage
         name: docker.io/m1k3pjem/cheese-java-pipeline-01
+      pullSecret:
+        name: hello-java-secret
       forcePull: true
   output:
+    pushSecret:
+      name: hello-java-secret
     to:
       kind: ImageStreamTag
       name: docker.io/m1k3pjem/cheese-java-pipeline-01
