@@ -41,7 +41,9 @@ pipeline {
                                 //oc set triggers bc/cheese-java-pipeline --from-github
                                 //openshift.newApp('deployscripts/BuildConfig.yaml')
                                 sh "oc create -f deployscripts/BuildConfig.yaml -n ${DEV_PROJECT}"
-                                sh "oc start-build ${APP_NAME} --follow"
+                                def bc = openshift.selector("bc", "${APP_NAME}")
+                                bc.startBuild()
+                                //sh "oc start-build ${APP_NAME} --follow"
                                 
                             }
                             def route = openshift.selector("route", APP_NAME)
