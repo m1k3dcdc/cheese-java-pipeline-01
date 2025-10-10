@@ -23,12 +23,12 @@ items:
           containers:
             - image: docker.io/m1k3pjem/hello-java-spring-boot:latest
               imagePullPolicy: IfNotPresent
-              name: hello-java-spring-boot
+              name: cheese-java-pipeline-01
               env:
                 - name: FAVOURITE_CHEESE
                   valueFrom:
                     configMapKeyRef:
-                      name: hello-java-spring-boot-configmap
+                      name: cheese-java-pipeline-01-configmap
                       key: thefavourite.cheese
               ports:
                 - containerPort: 8080
@@ -59,6 +59,6 @@ items:
           app: cheese-java-pipeline-01
           app.kubernetes.io/component: cheese-java-pipeline-01
           app.kubernetes.io/instance: cheese-java-pipeline-01
-      name: hello-java-spring-boot-configmap
+      name: cheese-java-pipeline-01-configmap
     data:
       thefavourite.cheese: GOUDA
