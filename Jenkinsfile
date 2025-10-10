@@ -6,6 +6,7 @@ pipeline {
 
     environment {
         APP_NAME = "cheese-java-pipeline-01"
+        BUILDCONFIG_NAME = "cheese-java-pipeline-01-bc"
         DEV_PROJECT = "mavc23-dev"
         APP_GIT_URL = "https://github.com/m1k3dcdc/hello-java-spring-boot.git"
     }
@@ -21,20 +22,22 @@ pipeline {
                         openshift.withProject("$DEV_PROJECT") {
                             echo "Using project: ${openshift.project()}"
                             // If BuildConfig already exists, start a new build to update the application
-                            if (openshift.selector("bc", APP_NAME).exists()) {
-                                echo "BuildConfig " + APP_NAME + " exists, start new build to update app ..."
+                            if (openshift.selector("bc", BUILDCONFIG_NAME).exists()) {
+                                echo "BuildConfig " + BUILDCONFIG_NAME + " exists, start new build to update app ..."
                                 // Start new build (it corresponds to oc start-build <buildconfig>)
-                                def bc = openshift.selector("bc", "${APP_NAME}")
+                                def bc = openshift.selector("bc", "${BUILDCONFIG_NAME}")
                                 bc.startBuild()
                             } else {
                                 // If BuildConfig does not exist, create
-                                echo "- BuildConfig " + APP_NAME + " does not exist, creating from BuildConfig.yaml ..."
+                                echo "- BuildConfig " + BUILDCONFIG_NAME + " does not exist, creating from BuildConfig.yaml ..."
                                 //oc set triggers bc/cheese-java-pipeline --from-github
                                 //openshift.newApp('deployscripts/BuildConfig.yaml')
-                                openshift.newBuild("--name=${APP_NAME}", "--image=docker.io/m1k3pjem/hello-java-spring-boot", "--binary")
+                                openshift.newBuild("--name=${BUILDCONFIG_NAME}", "--image=docker.io/m1k3pjem/hello-java-spring-boot", "--binary")
                                 //sh "oc create -f deployscripts/BuildConfig.yaml -n ${DEV_PROJECT}"
-                                openshift.selector("bc", "${APP_NAME}").startBuild("--from-dir=.", "--follow")
-                                //sh "oc start-build ${APP_NAME} --follow"                                
+                                //openshift.selector("bc", "${BUILDCONFIG_NAME}").startBuild("--from-dir=.", "--follow")
+                                def bc = openshift.selector("bc", "${BUILDCONFIG_NAME}")
+                                bc.startBuild()
+                                //sh "oc start-build ${BUILDCONFIG_NAME} --follow"                                
                             }
                             /*
                             // If a Route does not exist, expose the Service and create the Route
