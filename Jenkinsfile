@@ -27,7 +27,7 @@ pipeline {
                                 // Start new build (it corresponds to oc start-build <buildconfig>)
                                 def bc = openshift.selector("bc", "${BUILDCONFIG_NAME}")
                                 bc.startBuild()
-                            else{
+                            } else {
                                 echo "BuildConfig " + APP_NAME + " does not exist, creating app ..."
                                 openshift.newApp('deployscripts/cheese-java-pipeline-01-template.yaml')
                             }    /*
