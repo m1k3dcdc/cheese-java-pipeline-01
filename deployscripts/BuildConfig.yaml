@@ -1,32 +1,14 @@
-apiVersion: build.openshift.io/v1
-kind: BuildConfig
+kind: "BuildConfig"
+apiVersion: "build.openshift.io/v1"
 metadata:
-  name: cheese-java-pipeline-01-bc
-  labels:
-    app: cheese-java-pipeline-01
+  name: "cheese-java-pipeline-01-bc"
 spec:
   source:
-    type: Git
-    git:
-      uri: https://github.com/m1k3dcdc/cheese-java-pipeline-01.git
-      ref: main
     contextDir: .
+    git:
+      uri: "https://github.com/m1k3dcdc/cheese-java-pipeline-01.git"
+      ref: "main"
   strategy:
-    type: Source
-    sourceStrategy:
-      from:
-        kind: DockerImage
-        name: docker.io/m1k3pjem/cheese-java-pipeline-01
-      pullSecret:
-        name: hello-java-secret
-      forcePull: true
-  output:
-    pushSecret:
-      name: hello-java-secret
-    to:
-      kind: ImageStreamTag
-      name: docker.io/m1k3pjem/cheese-java-pipeline-01
-  triggers:
-    - type: ConfigChange
-    - type: ImageChange
-  runPolicy: Serial
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: Jenkinsfile
+    type: JenkinsPipeline
