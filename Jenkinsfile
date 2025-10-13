@@ -28,7 +28,7 @@ pipeline {
                                 def bc = openshift.selector("bc", "${BUILDCONFIG_NAME}")
                                 bc.startBuild()
                             } else {
-                                echo "BuildConfig " + APP_NAME + " does not exist, creating app ..."
+                                echo "BuildConfig " + APP_NAME + " does not exist, creating app ...(Template)"
                                 openshift.newApp('deployscripts/cheese-java-pipeline-01-template.yaml')
                             }    /*
                             } else {
@@ -65,12 +65,13 @@ pipeline {
             script {
               openshift.withCluster() {
                 openshift.withProject("$DEV_PROJECT") {
-    
+        
                   def deployment = openshift.selector("dc", "${APP_NAME}")
     
                   if (!deployment.exists()) {
+                      echo "Deployment " + APP_NAME + " no exists, create app ..."
                     //openshift.newApp('hello-java-spring-boot', "--as-deployment-config").narrow('svc').expose()
-                    sh "oc apply -f ./deploy.yml -n ${DEV_PROJECT}"
+                    //sh "oc apply -f ./deploy.yml -n ${DEV_PROJECT}"
                   }
     
                 }    // withProject
