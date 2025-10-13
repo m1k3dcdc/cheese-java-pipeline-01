@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: ${APP_NAME}
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${LABEL}
+  spec:
+    lookupPolicy:
+      local: false
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${LABEL}
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${APP_NAME}:latest
+    postCommit: {}
+    resources: {}
+    source:
+      contextDir: app
+      git:
+        uri: https://github.com/m1k3dcdc/cheese-java-pipeline-01.git
+        ref: ${GITHUB_BRANCH}
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: docker.io/m1k3pjem/cheese-java-pipeline-01
+          namespace: openshift
+      type: Source
+    triggers:
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${LABEL}
+  spec:
+    replicas: 1
+    selector:
+      app: ${LABEL}
+      deploymentconfig: ${APP_NAME}
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        labels:
+          app: ${LABEL}
+          deploymentconfig: ${APP_NAME}
+      spec:
+        containers:
+        - name: ${APP_NAME}
+          image: ${APP_NAME}:latest
+          env:
+            - name: TIMEOUT
+              value: ${TIMEOUT}
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - cheese-java-pipeline-01
+        from:
+          kind: ImageStreamTag
+          name: ${APP_NAME}:latest
+      type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${LABEL}
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: ${LABEL}
+      deploymentconfig: ${APP_NAME}
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${LABEL}
+  spec:
+    host: ${APP_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: ${APP_NAME}
+      weight: 100
+    wildcardPolicy: None
+parameters:
+  - name: GITHUB_BRANCH
+    required: true
+    value: main
+  - name: APP_NAME 
+    required: true
+    value: cheese-java-pipeline-01
+  - name: LABEL 
+    required: true
+    value: cheese-java-pipeline-01
+  - name: OPENSHIFT_PROJECT
+    required: true
+  - name: OPENSHIFT_CLUSTER_DOMAIN 
+    required: true
+  - name: TIMEOUT
+    required: true
+    value: 5000
