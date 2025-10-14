@@ -1,23 +1,23 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: ${APP_NAME}
+  name: cheese-java-pipeline-01
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
-    name: ${APP_NAME}-is
+    name: cheese-java-pipeline-01-is
     labels:
-      app: ${LABEL}
+      app: cheese-java-pipeline-01
   spec:
     lookupPolicy:
       local: false
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    name: ${APP_NAME}-bc
+    name: cheese-java-pipeline-01-bc
     labels:
-      app: ${LABEL}
+      app: cheese-java-pipeline-01
   spec:
     nodeSelector: null
     output:
@@ -44,20 +44,20 @@ objects:
   kind: Deployment
   metadata:
     labels:
-      app: ${APP_NAME}
-      app.kubernetes.io/component: ${APP_NAME}
-      app.kubernetes.io/instance: ${APP_NAME}
-    name: ${APP_NAME}-deploy
+      app: cheese-java-pipeline-01
+      app.kubernetes.io/component: cheese-java-pipeline-01
+      app.kubernetes.io/instance: cheese-java-pipeline-01
+    name: cheese-java-pipeline-01-deploy
   spec:
     replicas: 1
     selector:
       matchLabels:
-        app: ${APP_NAME}
+        app: cheese-java-pipeline-01
     template:
       metadata:
         labels:
-          app: ${LABEL}
-        name: ${APP_NAME}
+          app: cheese-java-pipeline-01
+        name: cheese-java-pipeline-01
       spec:
         containers:
           - image: docker.io/m1k3pjem/hello-java-spring-boot:latest
@@ -77,10 +77,10 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: ${LABEL}
-      app.kubernetes.io/component: ${APP_NAME}
-      app.kubernetes.io/instance: ${APP_NAME}
-    name: ${APP_NAME}-service
+      app: cheese-java-pipeline-01
+      app.kubernetes.io/component: cheese-java-pipeline-01
+      app.kubernetes.io/instance: cheese-java-pipeline-01
+    name: cheese-java-pipeline-01-service
   spec:
     ports:
       - name: 8080-tcp
@@ -88,35 +88,29 @@ objects:
         protocol: TCP
         targetPort: 8080
     selector:
-      app: ${LABEL}
-      deployment: ${APP_NAME}-deploy
+      app: cheese-java-pipeline-01
+      deployment: cheese-java-pipeline-01-deploy
     sessionAffinity: None
     type: ClusterIP
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
-    name: ${APP_NAME}-route
+    name: cheese-java-pipeline-01-route
     labels:
-      app: ${LABEL}
+      app: cheese-java-pipeline-01
   spec:
     host: ${APP_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
     port:
       targetPort: 8080-tcp
     to:
       kind: Service
-      name: ${APP_NAME}-service
+      name: cheese-java-pipeline-01-service
       weight: 100
     wildcardPolicy: None
 parameters:
   - name: GITHUB_BRANCH
     required: true
     value: main
-  - name: APP_NAME 
-    required: true
-    value: cheese-java-pipeline-01
-  - name: LABEL 
-    required: true
-    value: cheese-java-pipeline-01
   - name: OPENSHIFT_PROJECT
     required: true
   - name: OPENSHIFT_CLUSTER_DOMAIN 
