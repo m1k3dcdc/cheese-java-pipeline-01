@@ -6,7 +6,7 @@ objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
-    name: ${APP_NAME}
+    name: ${APP_NAME}-is
     labels:
       app: ${LABEL}
   spec:
@@ -15,7 +15,7 @@ objects:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    name: ${APP_NAME}
+    name: ${APP_NAME}-bc
     labels:
       app: ${LABEL}
   spec:
@@ -23,84 +23,79 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: ${APP_NAME}:latest
+        name: hello-java-spring-boot:latest
     postCommit: {}
     resources: {}
     source:
-      contextDir: app
-      git:
-        uri: https://github.com/m1k3dcdc/cheese-java-pipeline-01.git
-        ref: ${GITHUB_BRANCH}
-      type: Git
+      type: Binary
+      binary: {}
     strategy:
-      sourceStrategy:
+      type: Docker
+      dockerStrategy:
         from:
           kind: ImageStreamTag
-          name: docker.io/m1k3pjem/cheese-java-pipeline-01
-          namespace: openshift
-      type: Source
+          name: 'hello-java-spring-boot:latest'
     triggers:
     - type: ConfigChange
     - imageChange: {}
       type: ImageChange
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+    runPolicy: Serial
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
-    name: ${APP_NAME}
     labels:
-      app: ${LABEL}
+      app: ${APP_NAME}
+      app.kubernetes.io/component: ${APP_NAME}
+      app.kubernetes.io/instance: ${APP_NAME}
+    name: ${APP_NAME}-deploy
   spec:
     replicas: 1
     selector:
-      app: ${LABEL}
-      deploymentconfig: ${APP_NAME}
-    strategy:
-      resources: {}
+      matchLabels:
+        app: ${APP_NAME}
     template:
       metadata:
         labels:
           app: ${LABEL}
-          deploymentconfig: ${APP_NAME}
+        name: ${APP_NAME}
       spec:
         containers:
-        - name: ${APP_NAME}
-          image: ${APP_NAME}:latest
-          env:
-            - name: TIMEOUT
-              value: ${TIMEOUT}
-          ports:
-          - containerPort: 8080
-            protocol: TCP
-    test: false
-    triggers:
-    - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - cheese-java-pipeline-01
-        from:
-          kind: ImageStreamTag
-          name: ${APP_NAME}:latest
-      type: ImageChange
+          - image: docker.io/m1k3pjem/hello-java-spring-boot:latest
+            imagePullPolicy: IfNotPresent
+            name: hello-java-spring-boot
+            env:
+              - name: FAVOURITE_CHEESE
+                valueFrom:
+                  configMapKeyRef:
+                    name: hello-java-spring-boot-configmap
+                    key: thefavourite.cheese
+            ports:
+              - containerPort: 8080
+                protocol: TCP
+        restartPolicy: Always
 - apiVersion: v1
   kind: Service
   metadata:
-    name: ${APP_NAME}
     labels:
       app: ${LABEL}
+      app.kubernetes.io/component: ${APP_NAME}
+      app.kubernetes.io/instance: ${APP_NAME}
+    name: ${APP_NAME}-service
   spec:
     ports:
-    - name: 8080-tcp
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
+      - name: 8080-tcp
+        port: 8080
+        protocol: TCP
+        targetPort: 8080
     selector:
       app: ${LABEL}
-      deploymentconfig: ${APP_NAME}
+      deployment: ${APP_NAME}-deploy
+    sessionAffinity: None
+    type: ClusterIP
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
-    name: ${APP_NAME}
+    name: ${APP_NAME}-route
     labels:
       app: ${LABEL}
   spec:
@@ -109,7 +104,7 @@ objects:
       targetPort: 8080-tcp
     to:
       kind: Service
-      name: ${APP_NAME}
+      name: ${APP_NAME}-service
       weight: 100
     wildcardPolicy: None
 parameters:
@@ -126,6 +121,3 @@ parameters:
     required: true
   - name: OPENSHIFT_CLUSTER_DOMAIN 
     required: true
-  - name: TIMEOUT
-    required: true
-    value: 5000
