@@ -99,7 +99,7 @@ objects:
     labels:
       app: cheese-java-pipeline-01
   spec:
-    host: ${APP_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
+    #host: ${APP_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
     port:
       targetPort: 8080-tcp
     to:
@@ -107,11 +107,3 @@ objects:
       name: cheese-java-pipeline-01-service
       weight: 100
     wildcardPolicy: None
-parameters:
-  - name: GITHUB_BRANCH
-    required: true
-    value: main
-  - name: OPENSHIFT_PROJECT
-    required: true
-  - name: OPENSHIFT_CLUSTER_DOMAIN 
-    required: true
