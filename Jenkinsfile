@@ -6,7 +6,7 @@ pipeline {
 
     environment {
         APP_NAME = "cheese-java-pipeline-01"
-        BUILDCONFIG_NAME = "cheese-java-pipeline-01-bc"
+        BUILDCONFIG_NAME = "cheese-java-pipeline-01"
         DEV_PROJECT = "mavc23-dev"
         APP_GIT_URL = "https://github.com/m1k3dcdc/hello-java-spring-boot.git"
     }
