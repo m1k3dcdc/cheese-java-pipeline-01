@@ -6,7 +6,7 @@ objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
-    name: cheese-java-pipeline-01-is
+    name: cheese-java-pipeline-01
     labels:
       app: cheese-java-pipeline-01
   spec:
@@ -15,7 +15,7 @@ objects:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    name: cheese-java-pipeline-01-bc
+    name: cheese-java-pipeline-01
     labels:
       app: cheese-java-pipeline-01
   spec:
@@ -47,7 +47,7 @@ objects:
       app: cheese-java-pipeline-01
       app.kubernetes.io/component: cheese-java-pipeline-01
       app.kubernetes.io/instance: cheese-java-pipeline-01
-    name: cheese-java-pipeline-01-deploy
+    name: cheese-java-pipeline-01
   spec:
     replicas: 1
     selector:
@@ -80,7 +80,7 @@ objects:
       app: cheese-java-pipeline-01
       app.kubernetes.io/component: cheese-java-pipeline-01
       app.kubernetes.io/instance: cheese-java-pipeline-01
-    name: cheese-java-pipeline-01-service
+    name: cheese-java-pipeline-01
   spec:
     ports:
       - name: 8080-tcp
@@ -89,13 +89,13 @@ objects:
         targetPort: 8080
     selector:
       app: cheese-java-pipeline-01
-      deployment: cheese-java-pipeline-01-deploy
+      deployment: cheese-java-pipeline-01
     sessionAffinity: None
     type: ClusterIP
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
-    name: cheese-java-pipeline-01-route
+    name: cheese-java-pipeline-01
     labels:
       app: cheese-java-pipeline-01
   spec:
@@ -104,6 +104,6 @@ objects:
       targetPort: 8080-tcp
     to:
       kind: Service
-      name: cheese-java-pipeline-01-service
+      name: cheese-java-pipeline-01
       weight: 100
     wildcardPolicy: None
