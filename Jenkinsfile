@@ -1,5 +1,5 @@
-def templatePath = 'https://github.com/m1k3dcdc/cheese-java-pipeline-01/blob/main/deployscripts/cheese-java-pipeline-template.yaml' 
-def templateName = 'cheese-java-pipeline-template' 
+def templatePath = https://github.com/m1k3dcdc/cheese-java-pipeline-01/blob/main/deployscripts/cheese-java-pipeline-template.yaml
+def templateName = cheese-java-pipeline-template
 pipeline {
   agent any
 
