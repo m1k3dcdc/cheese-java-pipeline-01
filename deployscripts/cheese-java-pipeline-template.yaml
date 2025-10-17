@@ -26,6 +26,8 @@ objects:
         to:
           kind: ImageStreamTag
           name: ${APPLICATION_NAME}:latest
+        pushSecret:
+          name: hello-java-secret
       resources: {}    
       strategy:
         type: Docker
@@ -33,6 +35,8 @@ objects:
           from:
             kind: ImageStreamTag
             name: ${REGISTRY_IMAGE_NAME}
+          pullSecret:
+            name: hello-java-secret  
       postCommit: {}
       source:
         type: Binary
