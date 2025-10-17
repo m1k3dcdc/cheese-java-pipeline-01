@@ -27,7 +27,7 @@ pipeline {
             echo "STAGE: cleanup"
             openshift.withCluster() {
                 openshift.withProject() {
-                  openshift.selector("all", [ template : APPName ]).delete() 
+                  //openshift.selector("all", [ template : APPName ]).delete() 
                   //openshift.selector( 'dc', [ environment:'qe' ] ).delete()
                   if (openshift.selector("bc", APPName).exists()) { 
                     openshift.selector("bc", APPName).delete()
