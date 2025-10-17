@@ -25,14 +25,14 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${IMAGE_NAME}:latest
+          name: ${REGISTRY_IMAGE_NAME}:latest
       resources: {}    
       strategy:
         type: Docker
         dockerStrategy:
           from:
             kind: ImageStreamTag
-            name: ${IMAGE_NAME}:latest
+            name: ${REGISTRY_IMAGE_NAME}:latest
       postCommit: {}
       source:
         type: Binary
