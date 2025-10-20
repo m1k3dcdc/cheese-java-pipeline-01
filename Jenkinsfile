@@ -74,7 +74,7 @@ pipeline {
             echo "STAGE: build"
             openshift.withCluster() {
                 openshift.withProject() {
-                  def builds = openshift.selector("bc", templateName).related('builds')
+                  def builds = openshift.selector("bc", APPName).related('builds')
                   timeout(5) { 
                     builds.untilEach(1) {
                       return (it.object().status.phase == "Complete")
@@ -91,9 +91,9 @@ pipeline {
             echo "STAGE: deploy"
             openshift.withCluster() {
                 openshift.withProject() {
-                  def rm = openshift.selector("deploy", templateName).rollout()
+                  def rm = openshift.selector("deploy", APPName).rollout()
                   timeout(5) { 
-                    openshift.selector("deploy", templateName).related('pods').untilEach(1) {
+                    openshift.selector("deploy", APPName).related('pods').untilEach(1) {
                       return (it.object().status.phase == "Running")
                     }
                   }
@@ -108,7 +108,7 @@ pipeline {
             echo "STAGE: tag"
             openshift.withCluster() {
                 openshift.withProject() {
-                  openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
+                  openshift.tag("${APPName}:latest", "${APPName}-staging:latest") 
                 }
             }
         }
