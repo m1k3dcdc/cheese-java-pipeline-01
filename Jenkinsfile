@@ -27,13 +27,22 @@ pipeline {
             echo "STAGE: cleanup"
             openshift.withCluster() {
                 openshift.withProject() {
-                  openshift.selector("all", [ template : templateName ]).delete() 
+                  //openshift.selector("all", [ template : templateName ]).delete() 
                   //openshift.selector( 'dc', [ environment:'qe' ] ).delete()
                   if (openshift.selector("bc", APPName).exists()) { 
                     openshift.selector("bc", APPName).delete()
                   } 
                   if (openshift.selector("dc", APPName).exists()) { 
                     openshift.selector("dc", APPName).delete()
+                  }
+                  if (openshift.selector("is", APPName).exists()) { 
+                    openshift.selector("is", APPName).delete()
+                  }
+                  if (openshift.selector("svc", APPName).exists()) { 
+                    openshift.selector("svc", APPName).delete()
+                  }
+                  if (openshift.selector("route", APPName).exists()) { 
+                    openshift.selector("route", APPName).delete()
                   }
                   if (openshift.selector("secrets", APPName).exists()) { 
                     openshift.selector("secrets", APPName).delete()
