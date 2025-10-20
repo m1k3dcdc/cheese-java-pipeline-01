@@ -130,7 +130,8 @@ objects:
       #host: ${APPLICATION_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
       path: /cheese
       port:
-        targetPort: 8080-TCP
+        targetPort: 8080-tcp
+        port: 8080
       tls:
         termination: edge
         insecureEdgeTerminationPolicy: Redirect  
