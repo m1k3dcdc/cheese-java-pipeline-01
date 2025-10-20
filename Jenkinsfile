@@ -68,7 +68,7 @@ pipeline {
         }
       }
     }
-  /*  stage('build') {
+    stage('build') {
       steps {
         script {
             echo "STAGE: build"
@@ -84,16 +84,16 @@ pipeline {
             }
         }
       }
-    } */
+    } 
    /* stage('deploy') {
       steps {
         script {
             echo "STAGE: deploy"
             openshift.withCluster() {
                 openshift.withProject() {
-                  def rm = openshift.selector("dc", templateName).rollout()
+                  def rm = openshift.selector("deploy", templateName).rollout()
                   timeout(5) { 
-                    openshift.selector("dc", templateName).related('pods').untilEach(1) {
+                    openshift.selector("deploy", templateName).related('pods').untilEach(1) {
                       return (it.object().status.phase == "Running")
                     }
                   }
