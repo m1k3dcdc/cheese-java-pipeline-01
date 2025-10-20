@@ -11,7 +11,7 @@ parameters:
     value: "hello-java-spring-boot"
   - name: REGISTRY_IMAGE_NAME
     description: "The name of the registry container image"
-    value: "docker.io/m1k3pjem/hello-java-spring-boot:latest"
+    value: "docker.io/m1k3pjem/hello-java-spring-boot"
 objects:
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
@@ -34,7 +34,7 @@ objects:
         dockerStrategy:
           from:
             kind: ImageStreamTag
-            name: ${REGISTRY_IMAGE_NAME}
+            name: ${REGISTRY_IMAGE_NAME}:latest
           pullSecret:
             name: hello-java-secret  
       postCommit: {}
