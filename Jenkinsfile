@@ -1,6 +1,6 @@
-def templatePath = "https://github.com/m1k3dcdc/cheese-java-pipeline-01/blob/main/deployscripts/cheese-java-pipeline-template.yaml"
-def templateName = "cheese-java-pipeline-template"
-def APPName = "cheese-java-pipeline"
+def templatePath = 'https://github.com/m1k3dcdc/cheese-java-pipeline-01/blob/main/deployscripts/cheese-java-pipeline-template.yaml'
+def templateName = 'cheese-java-pipeline-template'
+def APPName = 'cheese-java-pipeline'
 pipeline {
   agent any
 
@@ -27,7 +27,7 @@ pipeline {
             echo "STAGE: cleanup"
             openshift.withCluster() {
                 openshift.withProject() {
-                  //openshift.selector("all", [ template : APPName ]).delete() 
+                  openshift.selector("all", [ template : templateName ]).delete() 
                   //openshift.selector( 'dc', [ environment:'qe' ] ).delete()
                   if (openshift.selector("bc", APPName).exists()) { 
                     openshift.selector("bc", APPName).delete()
@@ -55,7 +55,7 @@ pipeline {
         }
       }
     }
-    stage('build') {
+  /*  stage('build') {
       steps {
         script {
             echo "STAGE: build"
@@ -71,8 +71,8 @@ pipeline {
             }
         }
       }
-    }
-    stage('deploy') {
+    } */
+   /* stage('deploy') {
       steps {
         script {
             echo "STAGE: deploy"
@@ -88,8 +88,8 @@ pipeline {
             }
         }
       }
-    }
-    stage('tag') {
+    } */
+  /*  stage('tag') {
       steps {
         script {
             echo "STAGE: tag"
@@ -100,6 +100,6 @@ pipeline {
             }
         }
       }
-    }
+    } */
   }
 }
