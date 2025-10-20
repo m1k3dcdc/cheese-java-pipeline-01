@@ -11,7 +11,8 @@ parameters:
     value: hello-java-spring-boot
   - name: REGISTRY_IMAGE_NAME
     description: "The name of the registry container image"
-    value: docker.io/m1k3pjem/hello-java-spring-boot:latest
+    value: hello-java-spring-boot:latest
+    #value: "docker.io/m1k3pjem/hello-java-spring-boot:latest"
 objects:
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
@@ -42,10 +43,9 @@ objects:
         type: Binary
         binary: {}
       triggers:
-      - type: GitHub
       - type: ConfigChange
-      - imageChange: {}
-        type: ImageChange
+      - type: ImageChange
+        imageChange: {}        
       runPolicy: Serial
   - apiVersion: apps/v1
     kind: Deployment
@@ -117,7 +117,7 @@ objects:
         app: ${APPLICATION_NAME}
         deployment: ${APPLICATION_NAME}
       ports:
-        - name: 8080-TCP
+        - name: 8080-tcp
           protocol: TCP
           port: 8080
           targetPort: 8080
@@ -128,7 +128,7 @@ objects:
       labels:
         app: ${APPLICATION_NAME}
     spec:
-      host: ${APPLICATION_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
+      #host: ${APPLICATION_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
       path: /cheese
       port:
         targetPort: 8080-TCP
