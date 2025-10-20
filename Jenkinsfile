@@ -75,10 +75,18 @@ pipeline {
             openshift.withCluster() {
                 openshift.withProject() {
                   def builds = openshift.selector("bc", APPName).related('builds')
-                  timeout(5) { 
+                  timeout(10) { 
+                    builds.watch {
+                      // Within the body, the variable 'it' is bound to the watched Selector (i.e. builds)
+                      echo "So far, ${bc.name()} has created builds: ${it.names()}"
+          
+                      // End the watch only once a build object has been created.
+                      return it.count() > 0
+                    }
+                    /*
                     builds.untilEach(1) {
                       return (it.object().status.phase == "Complete")
-                    }
+                    } */
                   }
                 }
             }
