@@ -74,30 +74,13 @@ pipeline {
             echo "STAGE: build"
             openshift.withCluster() {
                 openshift.withProject() {
+                  echo "*** INIT"
                   def builds = openshift.selector("bc", APPName).related('builds')
-                  timeout(10) { 
-                    builds.watch {
-                      echo "*** INIT"
-                      if ( it.count() == 0 ) return false
-          
-                      // A robust script should not assume that only one build has been created, so
-                      // we will need to iterate through all builds.
-                      def allDone = true
-                      it.withEach {
-                          // 'it' is now bound to a Selector selecting a single object for this iteration.
-                          // Let's model it in Groovy to check its status.
-                          def buildModel = it.object()
-                          if ( it.object().status.phase != "Complete" ) {
-                              allDone = false
-                          }
-                      }
-                      echo "RETURN: build" +  allDone
-                      return allDone;
-                    }
-                    /*
+                  echo "*** BUILS related"
+                  timeout(5) { 
                     builds.untilEach(1) {
                       return (it.object().status.phase == "Complete")
-                    } */
+                    }
                   }
                 }
             }
