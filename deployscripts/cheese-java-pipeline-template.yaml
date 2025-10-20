@@ -33,7 +33,7 @@ objects:
         type: Docker
         dockerStrategy:
           from:
-            kind: ImageStreamTag
+            kind: DockerImage
             name: ${REGISTRY_IMAGE_NAME}:latest
           pullSecret:
             name: hello-java-secret  
