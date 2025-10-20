@@ -1,4 +1,5 @@
-def templatePath = 'https://github.com/m1k3dcdc/cheese-java-pipeline-01/blob/main/deployscripts/cheese-java-pipeline-template.yaml'
+//def templatePath = 'https://github.com/m1k3dcdc/cheese-java-pipeline-01/blob/main/deployscripts/cheese-java-pipeline-template.yaml'
+def templatePath = './deployscripts/cheese-java-pipeline-template.yaml'
 def templateName = 'cheese-java-pipeline-template'
 def APPName = 'cheese-java-pipeline'
 pipeline {
