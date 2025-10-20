@@ -77,11 +77,22 @@ pipeline {
                   def builds = openshift.selector("bc", APPName).related('builds')
                   timeout(10) { 
                     builds.watch {
-                      // Within the body, the variable 'it' is bound to the watched Selector (i.e. builds)
-                      echo "So far, ${bc.name()} has created builds: ${it.names()}"
+                      echo "*** INIT"
+                      if ( it.count() == 0 ) return false
           
-                      // End the watch only once a build object has been created.
-                      return it.count() > 0
+                      // A robust script should not assume that only one build has been created, so
+                      // we will need to iterate through all builds.
+                      def allDone = true
+                      it.withEach {
+                          // 'it' is now bound to a Selector selecting a single object for this iteration.
+                          // Let's model it in Groovy to check its status.
+                          def buildModel = it.object()
+                          if ( it.object().status.phase != "Complete" ) {
+                              allDone = false
+                          }
+                      }
+                      echo "RETURN: build" +  allDone
+                      return allDone;
                     }
                     /*
                     builds.untilEach(1) {
