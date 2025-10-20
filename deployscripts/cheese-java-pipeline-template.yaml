@@ -93,8 +93,6 @@ objects:
         local: false
       tags:
         - name: latest
-          annotations:
-            #openshift.io/imported-from: ${REGISTRY_IMAGE_NAME}
           from:
             kind: DockerImage
             name: ${REGISTRY_IMAGE_NAME}
@@ -120,23 +118,3 @@ objects:
           protocol: TCP
           port: 8080
           targetPort: 8080
-  - apiVersion: route.openshift.io/v1
-    kind: Route
-    metadata:
-      name: ${APPLICATION_NAME}
-      labels:
-        app: ${APPLICATION_NAME}
-    spec:
-      #host: ${APPLICATION_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
-      path: /cheese
-      port:
-        targetPort: 8080-tcp
-        port: 8080
-      tls:
-        termination: edge
-        insecureEdgeTerminationPolicy: Redirect  
-      to:
-        kind: Service
-        name: ${APPLICATION_NAME}
-        weight: 100
-      wildcardPolicy: None          
