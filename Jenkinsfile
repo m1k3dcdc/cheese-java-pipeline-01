@@ -17,6 +17,23 @@ pipeline {
                 openshift.withCluster() {
                     openshift.withProject() {
                         echo "Using project: ${openshift.project()}"
+
+                        // Create a Selector capable of selecting all service accounts in mycluster's default project
+                        def saSelector = openshift.selector( 'serviceaccount' )
+                    
+                        // Prints `oc describe serviceaccount` to Jenkins console
+                        saSelector.describe()
+                    
+                        // Selectors also allow you to easily iterate through all objects they currently select.
+                        saSelector.withEach { // The closure body will be executed once for each selected object.
+                            // The 'it' variable will be bound to a Selector which selects a single
+                            // object which is the focus of the iteration.
+                            echo "Service account: ${it.name()} is defined in ${openshift.project()}"
+                        }
+                    
+                        // Prints a list of current service accounts to the console
+                        echo "There are ${saSelector.count()} service accounts in project ${openshift.project()}"
+                        echo "They are named: ${saSelector.names()}"
                     }
                 }
             }
@@ -75,13 +92,16 @@ pipeline {
             openshift.withCluster() {
                 openshift.withProject() {
                   echo "*** INIT"
+                  def buildSelector = openshift.selector("bc", APPName).startBuild()
+                  buildSelector.logs('-f')
+                  /*
                   def builds = openshift.selector("bc", APPName).related('builds')
                   echo "*** BUILS related"
                   timeout(5) { 
                     builds.untilEach(1) {
                       return (it.object().status.phase == "Complete")
                     }
-                  }
+                  }*/
                 }
             }
         }
