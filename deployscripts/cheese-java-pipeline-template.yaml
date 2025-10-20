@@ -5,14 +5,13 @@ metadata:
 parameters:
   - name: APPLICATION_NAME
     description: "The name of the application"
-    value: cheese-java-pipeline
+    value: "cheese-java-pipeline"
   - name: IMAGE_NAME
     description: "The name of the container image"
-    value: hello-java-spring-boot
+    value: "hello-java-spring-boot"
   - name: REGISTRY_IMAGE_NAME
     description: "The name of the registry container image"
-    #value: hello-java-spring-boot:latest
-    value: "docker.io/m1k3pjem/hello-java-spring-boot"
+    value: "docker.io/m1k3pjem/hello-java-spring-boot:latest"
 objects:
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
