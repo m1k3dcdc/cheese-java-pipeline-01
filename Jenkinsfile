@@ -36,6 +36,9 @@ pipeline {
                   if (openshift.selector("dc", APPName).exists()) { 
                     openshift.selector("dc", APPName).delete()
                   }
+                  if (openshift.selector("deploy", APPName).exists()) { 
+                    openshift.selector("deploy", APPName).delete()
+                  }
                   if (openshift.selector("is", APPName).exists()) { 
                     openshift.selector("is", APPName).delete()
                   }
