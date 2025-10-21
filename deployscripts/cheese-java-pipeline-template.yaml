@@ -13,6 +13,26 @@ parameters:
     description: "The name of the registry container image"
     value: "docker.io/m1k3pjem/hello-java-spring-boot"
 objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: ${APPLICATION_NAME}
+      labels:
+        app: ${APPLICATION_NAME}
+        build: ${APPLICATION_NAME}  
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: latest
+          from:
+            kind: DockerImage
+            name: ${REGISTRY_IMAGE_NAME}
+          generation: 2
+          importPolicy:
+            importMode: Legacy
+          referencePolicy:
+            type: Source
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
     metadata:
@@ -81,26 +101,6 @@ objects:
           restartPolicy: Always
       strategy:
         type: RollingUpdate    
-  - apiVersion: image.openshift.io/v1
-    kind: ImageStream
-    metadata:
-      name: ${APPLICATION_NAME}
-      labels:
-        app: ${APPLICATION_NAME}
-        build: ${APPLICATION_NAME}  
-    spec:
-      lookupPolicy:
-        local: false
-      tags:
-        - name: latest
-          from:
-            kind: DockerImage
-            name: ${REGISTRY_IMAGE_NAME}
-          generation: 2
-          importPolicy:
-            importMode: Legacy
-          referencePolicy:
-            type: Source  
   - apiVersion: v1
     kind: Service
     metadata:
