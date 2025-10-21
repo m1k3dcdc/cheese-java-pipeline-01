@@ -129,18 +129,22 @@ pipeline {
             echo "STAGE: deploy"
             openshift.withCluster() {
                 openshift.withProject() {
-                  def rm = openshift.selector("deploy", APPName).rollout()
-                  //rm.logs('-f')
+                  openshift.selector("deploy", APPName).rollout()
                   echo "*** deploy rollout"
 
                   def deployPod = openshift.selector("deploy", APPName).related('pods')
                   deployPod.logs('-f')
                   echo "*** PODS related"
+                  deployPod.related('pods').untilEach {
+                    return it.object().status.phase == 'Running'
+                  }
+                  
+/*                 
                   timeout(5) { 
                     deployPod.untilEach(1) {
                       return (it.object().status.phase == "Running")
                     }
-                  }
+                  }  */
                   /*
                   timeout(5) { 
                     echo "*** Timeout"
