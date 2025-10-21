@@ -1,7 +1,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: ${APPLICATION_NAME}+"-template"
+  name: cheese-java-pipeline-template
 parameters:
   - name: APPLICATION_NAME
     description: "The name of the application"
