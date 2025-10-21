@@ -82,7 +82,7 @@ pipeline {
                 openshift.withProject() {
                   //openshift.newApp(templatePath) 
 
-                  def templateSelector = openshift.selector("template", "${APPName}")
+                  def templateSelector = openshift.selector("template", "${templateName}")
                   templateSelector.describe()
                   def templateExists = templateSelector.exists()
                   def template
