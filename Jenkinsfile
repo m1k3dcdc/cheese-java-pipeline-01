@@ -19,18 +19,15 @@ pipeline {
                         echo "Using project: ${openshift.project()}"
 
                         // Create a Selector capable of selecting all service accounts in mycluster's default project
-                        def saSelector = openshift.selector( 'serviceaccount' )
-                    
+                        def saSelector = openshift.selector( 'serviceaccount' )                    
                         // Prints `oc describe serviceaccount` to Jenkins console
-                        saSelector.describe()
-                    
+                        saSelector.describe()                    
                         // Selectors also allow you to easily iterate through all objects they currently select.
                         saSelector.withEach { // The closure body will be executed once for each selected object.
                             // The 'it' variable will be bound to a Selector which selects a single
                             // object which is the focus of the iteration.
                             echo "Service account: ${it.name()} is defined in ${openshift.project()}"
-                        }
-                    
+                        }                    
                         // Prints a list of current service accounts to the console
                         echo "There are ${saSelector.count()} service accounts in project ${openshift.project()}"
                         echo "They are named: ${saSelector.names()}"
@@ -92,8 +89,27 @@ pipeline {
             openshift.withCluster() {
                 openshift.withProject() {
                   echo "*** Start Build"
-                  def buildSelector = openshift.selector("bc", APPName).startBuild()
-                  buildSelector.logs('-f')
+
+                  def buildConfigExists = openshift.selector("bc", APPName).exists()
+                    
+                  echo "### BuildConfig: " + APP_NAME + " exists, start new build to update app ..."
+                  if (!buildConfigExists) {
+                        echo "### newBuild " + APPName
+                        openshift.newBuild("--name=${APPName}", "--image=docker.io/m1k3pjem/hello-java-spring-boot", "--binary")
+
+                        if (!openshift.selector("route", APPName).exists()) {
+                            echo "### Route " + APPName + " does not exist, exposing service ..." 
+                            def service = openshift.selector("service", APPName)
+                            service.expose()
+                        } else {
+                            echo "### Route " + APPName + " exist" 
+                        }    
+                    }    
+                    openshift.selector("bc", APPName).startBuild("--from-dir=.", "--follow")
+
+                  
+                  //def buildSelector = openshift.selector("bc", APPName).startBuild()
+                  //buildSelector.logs('-f')
                   /*
                   def builds = openshift.selector("bc", APPName).related('builds')
                   echo "*** BUILS related"
