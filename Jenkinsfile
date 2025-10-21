@@ -80,7 +80,17 @@ pipeline {
             echo "STAGE: create"
             openshift.withCluster() {
                 openshift.withProject() {
-                  openshift.newApp(templatePath) 
+                  //openshift.newApp(templatePath) 
+
+                  def templateSelector = openshift.selector("template", APPName)
+                  def templateExists = templateSelector.exists()
+                  def template
+                  if (!templateExists) {
+                      template = openshift.create(templatePath).object()
+                  } else {
+                      template = templateSelector.object()
+                  }
+                  
                 }
             }
         }
