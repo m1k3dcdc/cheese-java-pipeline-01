@@ -69,7 +69,7 @@ objects:
         imageChange: {}        
       runPolicy: Serial
   - apiVersion: apps/v1
-    kind: Deployment
+    kind: DeploymentConfig
     metadata:
       labels:
         app: ${APPLICATION_NAME}
@@ -114,7 +114,7 @@ objects:
       type: ClusterIP
       selector:
         app: ${APPLICATION_NAME}
-        deployment: ${APPLICATION_NAME}
+        deploymentConfig: ${APPLICATION_NAME}
       ports:
         - name: 8080-tcp
           protocol: TCP
