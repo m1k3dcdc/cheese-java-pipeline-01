@@ -105,8 +105,8 @@ pipeline {
                             echo "### Route " + APPName + " exist" 
                         }    
                     }    
-                    openshift.selector("bc", APPName).startBuild("--from-dir=.", "--follow")
-
+                    def startBuildLog = openshift.selector("bc", APPName).startBuild("--from-dir=.", "--follow")
+                    startBuildLog.logs('-f')
                   
                   //def buildSelector = openshift.selector("bc", APPName).startBuild()
                   //buildSelector.logs('-f')
