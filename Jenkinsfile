@@ -82,6 +82,9 @@ pipeline {
                 openshift.withProject() {
                   //openshift.newApp(templatePath) 
 
+                  def template = openshift.create("${templatePath}", "-f").object()
+                  template.describe()
+/*                  
                   def templateSelector = openshift.selector("template", "${templateName}")
                   templateSelector.describe()
                   def templateExists = templateSelector.exists()
@@ -93,7 +96,7 @@ pipeline {
                       echo "Create Template selector"
                       template = templateSelector.object()
                   }
-                 
+*/                 
                 }
             }
         }
