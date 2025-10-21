@@ -132,7 +132,7 @@ pipeline {
                   openshift.selector("deploy", APPName).rollout()
                   echo "*** deploy rollout"
 
-                  def deployPod = openshift.selector("deploy", APPName).related('pods')
+                  def deployPod = openshift.selector("deploy", APPName)
                   deployPod.logs('-f')
                   echo "*** PODS related"
                   deployPod.related('pods').untilEach {
