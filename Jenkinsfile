@@ -17,7 +17,7 @@ pipeline {
                 openshift.withCluster() {
                     openshift.withProject() {
                         echo "Using project: ${openshift.project()}"
-
+/*
                         // Create a Selector capable of selecting all service accounts in mycluster's default project
                         def saSelector = openshift.selector( 'serviceaccount' )                    
                         // Prints `oc describe serviceaccount` to Jenkins console
@@ -31,6 +31,7 @@ pipeline {
                         // Prints a list of current service accounts to the console
                         echo "There are ${saSelector.count()} service accounts in project ${openshift.project()}"
                         echo "They are named: ${saSelector.names()}"
+*/                        
                     }
                 }
             }
@@ -46,18 +47,23 @@ pipeline {
                   //openshift.selector( 'dc', [ environment:'qe' ] ).delete()
                   if (openshift.selector("is", APPName).exists()) { 
                     openshift.selector("is", APPName).delete()
+                    echo "*** is delete"
                   }
                   if (openshift.selector("bc", APPName).exists()) { 
                     openshift.selector("bc", APPName).delete()
+                    echo "*** bc delete"
                   }
                   if (openshift.selector("deploy", APPName).exists()) { 
                     openshift.selector("deploy", APPName).delete()
+                    echo "*** deploy delete"
                   }                  
                   if (openshift.selector("svc", APPName).exists()) { 
                     openshift.selector("svc", APPName).delete()
+                    echo "*** svc delete"
                   }
                   if (openshift.selector("route", APPName).exists()) { 
                     openshift.selector("route", APPName).delete()
+                    echo "*** route delete"
                   }
                 }
             }
@@ -124,9 +130,10 @@ pipeline {
             openshift.withCluster() {
                 openshift.withProject() {
                   def rm = openshift.selector("deploy", APPName).rollout()
+                  echo "*** deploy rollout"
                   timeout(5) { 
                     echo "*** Timeout"
-                    openshift.selector("deployment", APPName).related('pods').untilEach(1) {
+                    openshift.selector("deploy", APPName).related('pods').untilEach(1) {
                       return (it.object().status.phase == "Running")
                     }
                   }
