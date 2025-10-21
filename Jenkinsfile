@@ -50,9 +50,9 @@ pipeline {
                   if (openshift.selector("bc", APPName).exists()) { 
                     openshift.selector("bc", APPName).delete()
                   } 
-                  if (openshift.selector("dc", APPName).exists()) { 
-                    openshift.selector("dc", APPName).delete()
-                  }
+                  //if (openshift.selector("dc", APPName).exists()) { 
+                  //  openshift.selector("dc", APPName).delete()
+                  //}
                   if (openshift.selector("deploy", APPName).exists()) { 
                     openshift.selector("deploy", APPName).delete()
                   }
@@ -65,9 +65,9 @@ pipeline {
                   if (openshift.selector("route", APPName).exists()) { 
                     openshift.selector("route", APPName).delete()
                   }
-                  if (openshift.selector("secrets", APPName).exists()) { 
-                    openshift.selector("secrets", APPName).delete()
-                  }
+                  //if (openshift.selector("secrets", APPName).exists()) { 
+                  //  openshift.selector("secrets", APPName).delete()
+                  //}
                 }
             }
         }
@@ -91,7 +91,7 @@ pipeline {
             echo "STAGE: build"
             openshift.withCluster() {
                 openshift.withProject() {
-                  echo "*** INIT"
+                  echo "*** Start Build"
                   def buildSelector = openshift.selector("bc", APPName).startBuild()
                   buildSelector.logs('-f')
                   /*
