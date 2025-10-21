@@ -92,7 +92,7 @@ pipeline {
 
                   def buildConfigExists = openshift.selector("bc", APPName).exists()
                     
-                  echo "### BuildConfig: " + APP_NAME + " exists, start new build to update app ..."
+                  echo "### BuildConfig: " + APPName + " exists, start new build to update app ..."
                   if (!buildConfigExists) {
                         echo "### newBuild " + APPName
                         openshift.newBuild("--name=${APPName}", "--image=docker.io/m1k3pjem/hello-java-spring-boot", "--binary")
