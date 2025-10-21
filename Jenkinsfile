@@ -133,10 +133,10 @@ pipeline {
             echo "STAGE: deploy"
             openshift.withCluster() {
                 openshift.withProject() {
-                  openshift.selector("deploy", APPName).rollout()
-                  echo "*** Deploy rollout"
+                  openshift.selector("dc", APPName).rollout()
+                  echo "*** DeployC rollout"
 
-                  def deployPod = openshift.selector("deployment", APPName)
+                  def deployPod = openshift.selector("dc", APPName)
                   deployPod.logs("-f")
                   echo "*** Pod related"
                   deployPod.related("pods").untilEach {
