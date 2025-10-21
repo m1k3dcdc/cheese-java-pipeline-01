@@ -94,7 +94,7 @@ pipeline {
                 openshift.withProject() {
                   echo "*** Start Build"
 
-                  def buildConfigExists = openshift.selector("bc", "${APPName}").exists()
+                  def buildConfigExists = openshift.selector("bc", APPName).exists()
                     
                   echo "### BuildConfig: " + APPName + " exists, start new build ..."
                   if (!buildConfigExists) {
@@ -109,7 +109,7 @@ pipeline {
                             echo "### Route " + APPName + " exist" 
                         }*/
                   }    
-                  def startBuildLog = openshift.selector("bc", "${APPName}").startBuild("--from-dir=.")
+                  def startBuildLog = openshift.selector("bc", APPName).startBuild("--from-dir=.")
                   startBuildLog.logs('-f')
                                  
                   //def buildSelector = openshift.selector("bc", APPName).startBuild()
@@ -133,10 +133,10 @@ pipeline {
             echo "STAGE: deploy"
             openshift.withCluster() {
                 openshift.withProject() {
-                  openshift.selector("deploy", "${APPName}").rollout()
+                  openshift.selector("deploy", APPName).rollout()
                   echo "*** Deploy rollout"
 
-                  def deployPod = openshift.selector("deploy", "${APPName}")
+                  def deployPod = openshift.selector("deployment", APPName)
                   deployPod.logs("-f")
                   echo "*** Pod related"
                   deployPod.related("pods").untilEach {
