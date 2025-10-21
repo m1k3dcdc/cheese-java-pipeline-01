@@ -87,20 +87,20 @@ pipeline {
                   def buildConfigExists = openshift.selector("bc", APPName).exists()
                     
                   echo "### BuildConfig: " + APPName + " exists, start new build ..."
-                  if (buildConfigExists) {
+                  if (!buildConfigExists) {
                         echo "### newBuild " + APPName
                         openshift.newBuild("--name=${APPName}", "--image=docker.io/m1k3pjem/hello-java-spring-boot", "--binary")
-
-                        if (!openshift.selector("route", APPName).exists()) {
-                            echo "### Route " + APPName + " does not exist, exposing service ..." 
-                            def service = openshift.selector("service", APPName)
-                            service.expose()
-                        } else {
-                            echo "### Route " + APPName + " exist" 
-                        }
-                    }    
-                    def startBuildLog = openshift.selector("bc", APPName).startBuild("--from-dir=.")
-                    startBuildLog.logs('-f')
+                  }    
+                  def startBuildLog = openshift.selector("bc", APPName).startBuild("--from-dir=.")
+                  startBuildLog.logs('-f')
+                
+                  if (!openshift.selector("route", APPName).exists()) {
+                      echo "### Route " + APPName + " does not exist, exposing service ..." 
+                      def service = openshift.selector("service", APPName)
+                      service.expose()
+                  } else {
+                      echo "### Route " + APPName + " exist" 
+                  }
                   
                   //def buildSelector = openshift.selector("bc", APPName).startBuild()
                   //buildSelector.logs('-f')
