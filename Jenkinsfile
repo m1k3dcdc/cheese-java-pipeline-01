@@ -53,6 +53,10 @@ pipeline {
                     openshift.selector("bc", APPName).delete()
                     echo "*** bc delete"
                   }
+                  if (openshift.selector("dc", APPName).exists()) { 
+                    openshift.selector("dc", APPName).delete()
+                    echo "*** dc delete"
+                  }
                   if (openshift.selector("deploy", APPName).exists()) { 
                     openshift.selector("deploy", APPName).delete()
                     echo "*** deploy delete"
@@ -90,7 +94,7 @@ pipeline {
                 openshift.withProject() {
                   echo "*** Start Build"
 
-                  def buildConfigExists = openshift.selector("bc", APPName).exists()
+                  def buildConfigExists = openshift.selector("bc", "${APPName}").exists()
                     
                   echo "### BuildConfig: " + APPName + " exists, start new build ..."
                   if (!buildConfigExists) {
@@ -105,7 +109,7 @@ pipeline {
                             echo "### Route " + APPName + " exist" 
                         }*/
                   }    
-                  def startBuildLog = openshift.selector("bc", APPName).startBuild("--from-dir=.")
+                  def startBuildLog = openshift.selector("bc", "${APPName}").startBuild("--from-dir=.")
                   startBuildLog.logs('-f')
                                  
                   //def buildSelector = openshift.selector("bc", APPName).startBuild()
@@ -129,13 +133,13 @@ pipeline {
             echo "STAGE: deploy"
             openshift.withCluster() {
                 openshift.withProject() {
-                  openshift.selector("deploy", APPName).rollout()
-                  echo "*** deploy rollout"
+                  openshift.selector("deploy", "${APPName}").rollout()
+                  echo "*** Deploy rollout"
 
-                  def deployPod = openshift.selector("deploy", APPName)
-                  deployPod.logs('-f')
-                  echo "*** PODS related"
-                  deployPod.related('pods').untilEach {
+                  def deployPod = openshift.selector("deploy", "${APPName}")
+                  deployPod.logs("-f")
+                  echo "*** Pod related"
+                  deployPod.related("pods").untilEach {
                     return it.object().status.phase == 'Running'
                   }
                   
