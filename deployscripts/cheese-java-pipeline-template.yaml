@@ -1,7 +1,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: ${APPLICATION_NAME}-template
+  name: ${APPLICATION_NAME}+"-template"
 parameters:
   - name: APPLICATION_NAME
     description: "The name of the application"
