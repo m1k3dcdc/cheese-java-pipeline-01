@@ -44,8 +44,10 @@ objects:
       nodeSelector: null
       output:
         to:
-          kind: ImageStreamTag
-          name: ${APPLICATION_NAME}:latest
+          #kind: ImageStreamTag
+          #name: ${APPLICATION_NAME}:latest
+          kind: DockerImage
+          name: docker.io/m1k3pjem/${APPLICATION_NAME}          
         pushSecret:
           name: hello-java-secret
       resources: {}    
@@ -117,4 +119,4 @@ objects:
         - name: 8080-tcp
           protocol: TCP
           port: 8080
-          targetPort: 8080
+          targetPort: 8080-tcp
