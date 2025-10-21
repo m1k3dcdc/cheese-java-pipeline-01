@@ -126,7 +126,7 @@ pipeline {
                   def rm = openshift.selector("deploy", APPName).rollout()
                   timeout(5) { 
                     echo "*** Timeout"
-                    openshift.selector("deploy", APPName).related('pods').untilEach(1) {
+                    openshift.selector("deployment", APPName).related('pods').untilEach(1) {
                       return (it.object().status.phase == "Running")
                     }
                   }
