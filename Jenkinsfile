@@ -82,8 +82,7 @@ pipeline {
                 openshift.withProject() {
                   //openshift.newApp(templatePath) 
 
-                  def template = openshift.create("${templatePath}", "-f")
-                  template.describe()
+                  sh "oc apply -f ${templatePath}"
 /*                  
                   def templateSelector = openshift.selector("template", "${templateName}")
                   templateSelector.describe()
