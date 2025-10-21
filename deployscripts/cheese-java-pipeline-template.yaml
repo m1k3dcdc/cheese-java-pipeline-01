@@ -68,7 +68,7 @@ objects:
       - type: ImageChange
         imageChange: {}        
       runPolicy: Serial
-  - apiVersion: apps/v1
+  - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     metadata:
       labels:
