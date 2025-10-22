@@ -148,8 +148,7 @@ pipeline {
             echo "STAGE: deploy"
             openshift.withCluster() {
                 openshift.withProject() {
-                  def startRollout = openshift.selector("dc", APPName).rollout()
-                  startRollout.logs('-f')
+                  openshift.selector("dc", APPName).rollout()
                   echo "*** DeployC rollout"
 /*
                   def deployPod = openshift.selector("dc", APPName)
