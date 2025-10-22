@@ -16,7 +16,7 @@ pipeline {
                 echo "STAGE: preamble"
                 openshift.withCluster() {
                     openshift.withProject() {
-                        echo "Using project: ${openshift.project()}"
+                        echo "*** Using project: ${openshift.project()}"
 /*
                         // Create a Selector capable of selecting all service accounts in mycluster's default project
                         def saSelector = openshift.selector( 'serviceaccount' )                    
