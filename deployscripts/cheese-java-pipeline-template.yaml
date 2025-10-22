@@ -44,10 +44,8 @@ objects:
       nodeSelector: null
       output:
         to:
-          #kind: ImageStreamTag
-          #name: ${APPLICATION_NAME}:latest
           kind: DockerImage
-          name: "docker.io/m1k3pjem/"+${APPLICATION_NAME}          
+          name: docker.io/m1k3pjem/${APPLICATION_NAME}          
         pushSecret:
           name: hello-java-secret
       resources: {}    
@@ -56,7 +54,7 @@ objects:
         dockerStrategy:
           from:
             kind: DockerImage
-            name: ${REGISTRY_IMAGE_NAME}+":latest"
+            name: ${REGISTRY_IMAGE_NAME}:latest
           pullSecret:
             name: hello-java-secret  
       postCommit: {}
