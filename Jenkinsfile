@@ -82,7 +82,7 @@ pipeline {
                 openshift.withProject() {
                   //openshift.newApp(templatePath) 
 
-                  sh "oc apply -f ${templatePath}"
+                  sh "oc create -f ${templatePath}"
 /*                  
                   def templateSelector = openshift.selector("template", "${templateName}")
                   templateSelector.describe()
@@ -148,8 +148,15 @@ pipeline {
             echo "STAGE: deploy"
             openshift.withCluster() {
                 openshift.withProject() {
-                  openshift.selector("dc", APPName).rollout()
-                  echo "*** DeployC rollout"
+                  //openshift.selector("dc", APPName).rollout()
+                  echo "*** Deploy Config"
+                  
+                  def deployment = openshift.selector("dc", APPName)
+    
+                  if(!deployment.exists()){
+                    //openshift.newApp('hello-java-spring-boot', "--as-deployment-config").narrow('svc').expose()
+                    sh "oc apply -f ${templatePath}"
+                  }
 /*
                   def deployPod = openshift.selector("dc", APPName)
                   deployPod.logs("-f")
