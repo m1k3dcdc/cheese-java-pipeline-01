@@ -150,14 +150,14 @@ pipeline {
                 openshift.withProject() {
                   openshift.selector("dc", APPName).rollout()
                   echo "*** DeployC rollout"
-
+/*
                   def deployPod = openshift.selector("dc", APPName)
                   deployPod.logs("-f")
                   echo "*** Pod related"
                   deployPod.related("pods").untilEach {
                     return it.object().status.phase == 'Running'
                   }
-                  
+  */                
 /*                 
                   timeout(5) { 
                     deployPod.untilEach(1) {
