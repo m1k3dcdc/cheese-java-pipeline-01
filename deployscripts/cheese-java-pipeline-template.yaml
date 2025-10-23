@@ -135,7 +135,7 @@ objects:
         app: ${APPLICATION_NAME}
         deploymentConfig: ${APPLICATION_NAME}
       ports:
-        - name: 8080
+        - name: 8080-tcp
           protocol: TCP
           port: 8080
           targetPort: 8080
@@ -150,7 +150,7 @@ objects:
     spec:
       path: /cheese
       port:
-        targetPort: 8080
+        targetPort: 8080-tcp
       tls:
         termination: edge
         insecureEdgeTerminationPolicy: Redirect  
