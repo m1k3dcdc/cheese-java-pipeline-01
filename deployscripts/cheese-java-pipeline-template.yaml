@@ -135,7 +135,7 @@ objects:
         app: ${APPLICATION_NAME}
         deploymentConfig: ${APPLICATION_NAME}
       ports:
-        - name: 8080-tcp
+        - name: 8080
           protocol: TCP
           port: 8080
           targetPort: 8080
