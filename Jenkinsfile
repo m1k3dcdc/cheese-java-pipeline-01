@@ -158,7 +158,9 @@ pipeline {
     
                   if(!deployment.exists()){
                     //openshift.newApp('hello-java-spring-boot', "--as-deployment-config").narrow('svc').expose()
-                    sh "oc apply ${APPName}"
+                    openshift.rollout(APPName, "--as-deployment-config")
+                   // sh "oc apply dc/${APPName}"
+                   // oc rollout latest dc/<name>
                   }
 /*
                   def deployPod = openshift.selector("dc", APPName)
