@@ -106,7 +106,7 @@ objects:
                 - name: FAVOURITE_CHEESE
                   valueFrom:
                     configMapKeyRef:
-                      name: ${IMAGE_NAME}+"-configmap"
+                      name: ${IMAGE_NAME}-configmap
                       key: thefavourite.cheese
           triggers:
           - type: ConfigChange
@@ -148,7 +148,6 @@ objects:
       annotations:
         template.alpha.openshift.io/wait-for-ready: "true"  
     spec:
-      #host: ${APPLICATION_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
       path: /cheese
       port:
         targetPort: 8080-tcp
