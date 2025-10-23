@@ -81,26 +81,30 @@ pipeline {
             openshift.withCluster() {
                 openshift.withProject() {
                   //openshift.newApp(templatePath) 
-
                   //sh "oc delete template ${templateName}"
+/*                  
                   if (openshift.selector("template", templateName).exists()) { 
                     openshift.selector("template", templateName).delete()
                     echo "*** template delete"
                   }
                   sh "oc process -f ${templatePath} | oc create -f -"
-/*                  
-                  def templateSelector = openshift.selector("template", "${templateName}")
+*/                  
+                  
+                  def templateSelector = openshift.selector("template", templateName)
                   templateSelector.describe()
                   def templateExists = templateSelector.exists()
                   def template
-                  if (!templateExists) {
+                  if (templateExists) {
+                      openshift.selector("template", templateName).delete()
+                      echo "*** template delete"
+                   } else { 
                       echo "Create Template"
-                      template = openshift.create("${templatePath}", "-f").object()
-                  } else {
-                      echo "Create Template selector"
+                      sh "oc process -f ${templatePath} | oc create -f -"
+                      //template = openshift.create(templatePath, "-f").object()
                       template = templateSelector.object()
+                      template.describe()
                   }
-*/                 
+                 
                 }
             }
         }
@@ -162,6 +166,12 @@ pipeline {
                     //openshift.newApp('hello-java-spring-boot', "--as-deployment-config").narrow('svc').expose()
                    // sh "oc apply dc/${APPName}"
                     sh "oc rollout latest dc/${APPName}"
+                  }
+
+                  if (!openshift.selector("route", APPName).exists()) {
+                    echo "### Route " + APPName + " does not exist, exposing service ..." 
+                    def service = openshift.selector("service", APPName)
+                    service.expose()
                   }
 /*
                   def deployPod = openshift.selector("dc", APPName)
