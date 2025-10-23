@@ -1,7 +1,13 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: cheese-java-pipeline-template
+  name: "${APPLICATION_NAME}-template"
+  annotations:
+    iconClass: icon-jenkins
+    template.alpha.openshift.io/wait-for-ready: "true"
+labels:
+  template: "${APPLICATION_NAME}-template"
+  app: "${APPLICATION_NAME}"
 parameters:
   - name: APPLICATION_NAME
     description: "The name of the application"
@@ -19,7 +25,9 @@ objects:
       name: ${APPLICATION_NAME}
       labels:
         app: ${APPLICATION_NAME}
-        build: ${APPLICATION_NAME}  
+        build: ${APPLICATION_NAME}
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: "true"  
     spec:
       lookupPolicy:
         local: false
@@ -40,6 +48,8 @@ objects:
       labels:
         app: ${APPLICATION_NAME}
         build: ${APPLICATION_NAME}
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: "true"  
     spec:
       nodeSelector: null
       output:
@@ -69,9 +79,11 @@ objects:
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     metadata:
-      labels:
-        app: ${APPLICATION_NAME}
       name: ${APPLICATION_NAME}
+      labels:
+        app: ${APPLICATION_NAME}     
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: "true"
     spec:
       replicas: 1
       selector:
@@ -111,9 +123,11 @@ objects:
   - apiVersion: v1
     kind: Service
     metadata:
+      name: ${APPLICATION_NAME}
       labels:
         app: ${APPLICATION_NAME}
-      name: ${APPLICATION_NAME}
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: "true"
     spec:
       sessionAffinity: None
       type: ClusterIP
@@ -131,6 +145,8 @@ objects:
       name: ${APPLICATION_NAME}
       labels:
         app: ${APPLICATION_NAME}
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: "true"  
     spec:
       #host: ${APPLICATION_NAME}-${OPENSHIFT_PROJECT}.${OPENSHIFT_CLUSTER_DOMAIN}
       path: /cheese
