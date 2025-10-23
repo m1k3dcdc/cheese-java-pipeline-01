@@ -90,11 +90,11 @@ pipeline {
                   sh "oc process -f ${templatePath} | oc create -f -"
 */                  
                   
-                  def templateSelector = openshift.selector("template", templateName)
-                  templateSelector.describe()
+                  def templateSelector = openshift.selector("template", templateName)                  
                   def templateExists = templateSelector.exists()
                   def template
                   if (templateExists) {
+                      templateSelector.describe()
                       openshift.selector("template", templateName).delete()
                       echo "*** template delete"
                    } else { 
