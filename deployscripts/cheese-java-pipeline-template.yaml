@@ -135,10 +135,10 @@ objects:
         app: ${APPLICATION_NAME}
         deploymentConfig: ${APPLICATION_NAME}
       ports:
-        - name: 8080-tcp
-          protocol: TCP
+        - name: "8080-tcp"
+          protocol: "TCP"
           port: 8080
-          targetPort: 8080
+          targetPort: "8080-tcp"
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
@@ -148,9 +148,9 @@ objects:
       annotations:
         template.alpha.openshift.io/wait-for-ready: "true"  
     spec:
-      path: /cheese
+      path: "/cheese"
       port:
-        targetPort: 8080
+        targetPort: "8080-tcp"
       tls:
         termination: edge
         insecureEdgeTerminationPolicy: Redirect  
