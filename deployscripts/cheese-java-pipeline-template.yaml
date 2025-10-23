@@ -1,13 +1,13 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: "${APPLICATION_NAME}-template"
+  name: cheese-java-pipeline-template
   annotations:
     iconClass: icon-jenkins
     template.alpha.openshift.io/wait-for-ready: "true"
 labels:
-  template: "${APPLICATION_NAME}-template"
-  app: "${APPLICATION_NAME}"
+  template: cheese-java-pipeline-template
+  app: cheese-java-pipeline
 parameters:
   - name: APPLICATION_NAME
     description: "The name of the application"
