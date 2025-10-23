@@ -158,7 +158,7 @@ pipeline {
     
                   if(!deployment.exists()){
                     //openshift.newApp('hello-java-spring-boot', "--as-deployment-config").narrow('svc').expose()
-                    sh "oc apply -f ${APPName}"
+                    sh "oc apply ${APPName}"
                   }
 /*
                   def deployPod = openshift.selector("dc", APPName)
