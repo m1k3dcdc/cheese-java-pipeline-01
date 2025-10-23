@@ -1,4 +1,3 @@
-//def templatePath = 'https://github.com/m1k3dcdc/cheese-java-pipeline-01/blob/main/deployscripts/cheese-java-pipeline-template.yaml'
 def templatePath = './deployscripts/cheese-java-pipeline-template.yaml'
 def templateName = 'cheese-java-pipeline-template'
 def APPName = 'cheese-java-pipeline'
@@ -46,10 +45,6 @@ pipeline {
                   //openshift.selector("all", [ template : templateName ]).delete() 
                   //openshift.selector( 'dc', [ environment:'qe' ] ).delete()
 
-                  if (openshift.selector("template", APPName).exists()) { 
-                    openshift.selector("template", APPName).delete()
-                    echo "*** template delete"
-                  }
                   if (openshift.selector("is", APPName).exists()) { 
                     openshift.selector("is", APPName).delete()
                     echo "*** is delete"
@@ -163,7 +158,7 @@ pipeline {
     
                   if(!deployment.exists()){
                     //openshift.newApp('hello-java-spring-boot', "--as-deployment-config").narrow('svc').expose()
-                    sh "oc apply -f ${templatePath}"
+                    sh "oc apply -f ${APPName}"
                   }
 /*
                   def deployPod = openshift.selector("dc", APPName)
