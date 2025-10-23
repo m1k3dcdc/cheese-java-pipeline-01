@@ -84,7 +84,7 @@ pipeline {
 
                   sh "oc delete template ${templateName}"
                   //sh "oc create -f ${templatePath}"
-                  sh "oc process -f ${templatePath}" | oc create -f -"
+                  sh "oc process -f ${templatePath}" | oc create -f"
 /*                  
                   def templateSelector = openshift.selector("template", "${templateName}")
                   templateSelector.describe()
