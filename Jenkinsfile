@@ -82,9 +82,12 @@ pipeline {
                 openshift.withProject() {
                   //openshift.newApp(templatePath) 
 
-                  sh "oc delete template ${templateName}"
-                  //sh "oc create -f ${templatePath}"
-                  sh "oc process -f ${templatePath} | oc apply -f -"
+                  //sh "oc delete template ${templateName}"
+                  if (openshift.selector("template", templateName).exists()) { 
+                    openshift.selector("template", templateName).delete()
+                    echo "*** template delete"
+                  }
+                  sh "oc process -f ${templatePath} | oc create -f -"
 /*                  
                   def templateSelector = openshift.selector("template", "${templateName}")
                   templateSelector.describe()
