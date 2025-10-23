@@ -87,6 +87,7 @@ pipeline {
                 openshift.withProject() {
                   //openshift.newApp(templatePath) 
 
+                  sh "oc delete template ${templateName}"
                   sh "oc create -f ${templatePath}"
                   sh "oc process ${templateName}"
                   //sh "oc process -f ${templatePath}" | oc create -f -"
