@@ -173,6 +173,7 @@ pipeline {
                     def service = openshift.selector("service", APPName)
                     service.expose()
                   }
+                  openshift.selector("service", APPName).expose()
 /*
                   def deployPod = openshift.selector("dc", APPName)
                   deployPod.logs("-f")
