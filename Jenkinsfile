@@ -46,7 +46,6 @@ pipeline {
                   //openshift.selector("all", [ template : templateName ]).delete() 
                   //openshift.selector( 'dc', [ environment:'qe' ] ).delete()
 
-                  cheese-java-pipeline-template
                   if (openshift.selector("template", APPName).exists()) { 
                     openshift.selector("template", APPName).delete()
                     echo "*** template delete"
@@ -89,7 +88,7 @@ pipeline {
                   //openshift.newApp(templatePath) 
 
                   sh "oc create -f ${templatePath}"
-                  sh "oc process ${templatePath}"
+                  sh "oc process ${templateName}"
                   //sh "oc process -f ${templatePath}" | oc create -f -"
 /*                  
                   def templateSelector = openshift.selector("template", "${templateName}")
