@@ -129,13 +129,30 @@ objects:
       annotations:
         template.alpha.openshift.io/wait-for-ready: "true"
     spec:
-      sessionAffinity: None
       type: ClusterIP
       selector:
         app: ${APPLICATION_NAME}
-        deploymentConfig: ${APPLICATION_NAME}
       ports:
-        - name: "8080-tcp"
-          protocol: "TCP"
+        - name: 8080-tcp
+          protocol: TCP
           port: 8080
-          targetPort: "8080-tcp"
+          targetPort: 8080
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      name: ${APPLICATION_NAME}
+      labels:
+        app: ${APPLICATION_NAME}
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: "true"  
+    spec:
+      path: "/cheese"
+      port:
+        targetPort: 8080-tcp
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect  
+      to:
+        kind: Service
+        name: ${APPLICATION_NAME}
+        weight: 100
