@@ -138,7 +138,7 @@ objects:
         - name: 8080-tcp
           protocol: TCP
           port: 8080
-          targetPort: 8080-tcp
+          targetPort: 8080
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
@@ -150,7 +150,7 @@ objects:
     spec:
       path: /cheese
       port:
-        targetPort: 8080-tcp
+        targetPort: 8080
       tls:
         termination: edge
         insecureEdgeTerminationPolicy: Redirect  
