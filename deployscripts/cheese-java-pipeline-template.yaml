@@ -50,15 +50,10 @@ objects:
         build: ${APPLICATION_NAME}
       annotations:
         template.alpha.openshift.io/wait-for-ready: "true"  
-    spec:
-      nodeSelector: null
-      output:
-        to:
-          kind: DockerImage
-          name: docker.io/m1k3pjem/${APPLICATION_NAME}          
-        pushSecret:
-          name: hello-java-secret
-      resources: {}    
+    spec:   
+      source:
+        type: Binary
+        #binary: {}
       strategy:
         type: Docker
         dockerStrategy:
@@ -66,12 +61,18 @@ objects:
             kind: DockerImage
             name: ${REGISTRY_IMAGE_NAME}:latest
           pullSecret:
-            name: hello-java-secret  
-      postCommit: {}
-      source:
-        type: Binary
-        binary: {}
+            name: hello-java-secret
+        output:
+          to:
+            kind: DockerImage
+            name: docker.io/m1k3pjem/${APPLICATION_NAME}          
+          pushSecret:
+            name: hello-java-secret    
+        postCommit: {}
+        nodeSelector: null      
+        resources: {}          
       triggers:
+        - type: GitHub
         - type: ConfigChange
         - type: ImageChange
           imageChange: {}        
