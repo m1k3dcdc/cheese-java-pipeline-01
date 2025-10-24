@@ -74,7 +74,7 @@ objects:
       triggers:
         - type: GitHub
           github:
-            secret: "Pj3M$zXx23M"
+            secret: "bTFrM3BqZW"
         - type: ConfigChange
         - type: ImageChange      
       runPolicy: Serial
