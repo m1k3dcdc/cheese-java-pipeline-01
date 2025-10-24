@@ -74,7 +74,8 @@ objects:
       triggers:
         - type: GitHub
           github:
-            secret: "bTFrM3BqZW"
+            secretReference:
+              name: new-java-hello-git-github-webhook-secret
         - type: ConfigChange
         - type: ImageChange      
       runPolicy: Serial
