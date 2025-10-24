@@ -73,9 +73,10 @@ objects:
         resources: {}          
       triggers:
         - type: GitHub
+          github:
+            secret: "Pj3M$zXx23M"
         - type: ConfigChange
-        - type: ImageChange
-          imageChange: {}        
+        - type: ImageChange      
       runPolicy: Serial
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
