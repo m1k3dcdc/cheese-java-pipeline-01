@@ -173,6 +173,12 @@ pipeline {
                     def service = openshift.selector("service", APPName)
                     service.expose()
                   }
+
+                  if (openshift.selector("bc", APPName).exists()) {
+                    echo "### BC " + APPName + " exist, create Trigger ..." 
+                    sh "oc set triggers bc/${APPName} --from-github --webhook-secret=Pj3M$zXx23M"
+                    //oc set triggers bc/APPName --from-github --webhook-secret=mysecret123
+                  }
 /*
                   def deployPod = openshift.selector("dc", APPName)
                   deployPod.logs("-f")
