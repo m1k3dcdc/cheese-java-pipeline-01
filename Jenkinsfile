@@ -176,7 +176,7 @@ pipeline {
 
                   if (openshift.selector("bc", APPName).exists()) {
                     echo "### BC " + APPName + " exist, create Trigger ..." 
-                    sh "oc set triggers bc/${APPName} --from-github --webhook-secret=bTFrM3BqZW"
+                    sh "oc set triggers bc/${APPName} --from-github=false"
                     //oc set triggers bc/APPName --from-github --webhook-secret=mysecret123
                   }
 /*
